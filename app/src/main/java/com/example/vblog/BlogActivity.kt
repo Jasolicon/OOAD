@@ -11,12 +11,14 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_blog.*
+import java.lang.Integer.max
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
 class BlogActivity : AppCompatActivity() {
 //    private var _intent:Intent = Intent(this,ListActivity::class.java)
+    var selected = Article()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -25,13 +27,13 @@ class BlogActivity : AppCompatActivity() {
         setContentView(R.layout.activity_blog)
         tv_date_b.text=getDate()
         tv_time_b.text=getDate()
-//        if(isIntentAvailable(this,intent)){
-//            var selected = intent.getSerializableExtra("selected") as Article
-//            tv_date_b.text=selected.getPublishDate()
+
+//        selected = intent?.getSerializableExtra("selected") as Article
+//        tv_date_b.text=selected.getPublishDate()
 //
-//            et_title.text=selected.getTitle() as Editable
-//            et_mdContent.text=selected.getMdContent() as Editable
-//        }
+//        et_title.text=selected.getTitle() as Editable
+//        et_mdContent.text=selected.getMdContent() as Editable
+
 
         btnConfirm.setOnClickListener {onClick()}
         btnList.setOnClickListener {onClickOpenListActivity()}
@@ -39,12 +41,17 @@ class BlogActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        var selected = intent!!.getSerializableExtra("selected") as Article
-            tv_date_b.text=selected.getPublishDate()
 
-            et_title.text=selected.getTitle() as Editable
-            et_mdContent.text=selected.getMdContent() as Editable
+        setIntent(intent)
+
+        selected = intent!!.getSerializableExtra("selected") as Article
+        Toast.makeText(this,selected.getTitle(), Toast.LENGTH_SHORT).show()
+        tv_date_b.text=selected.getPublishDate()
+//
+        et_title.setText(selected.getTitle())
+        et_mdContent.setText(selected.getMdContent())
     }
+
     private fun onClick(){
         var currentArticle = Article()
         currentArticle.apply{
@@ -53,7 +60,9 @@ class BlogActivity : AppCompatActivity() {
             setMdContent(et_mdContent.text.toString())
             setHtmlContent("<p>"+et_mdContent.text.toString()+"</p>")
 //            setSummary(et_mdContent.text.toString().substring(0,max(et_mdContent.text.toString().length,20)))
-        }.let { staticArticleList?.add(it) }
+        }.let { staticArticleList?.add(it)
+
+        }
 //        TODO("sql")
 //        staticArticleList?.add(currentArticle)
         Toast.makeText(this,"已上传",Toast.LENGTH_SHORT).show()
