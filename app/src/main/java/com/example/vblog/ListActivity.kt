@@ -19,6 +19,7 @@ class ListActivity : AppCompatActivity() {
 //            }
             var intent: Intent = Intent(this, BlogActivity::class.java).apply {
                 putExtra("selected", staticArticleList!![position])
+                putExtra("position",position)
             }
             Toast.makeText(this,"list open",Toast.LENGTH_SHORT).show()
 

@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter
 class BlogActivity : AppCompatActivity() {
 //    private var _intent:Intent = Intent(this,ListActivity::class.java)
     var selected = Article()
+    var position=-1
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -47,20 +48,26 @@ class BlogActivity : AppCompatActivity() {
         selected = intent!!.getSerializableExtra("selected") as Article
         Toast.makeText(this,selected.getTitle(), Toast.LENGTH_SHORT).show()
         tv_date_b.text=selected.getPublishDate()
-//
+        tv_time_b.text=selected.getEditTime()
         et_title.setText(selected.getTitle())
         et_mdContent.setText(selected.getMdContent())
+        position=intent!!.getIntExtra("position",-1)
+
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun onClick(){
-        var currentArticle = Article()
-        currentArticle.apply{
+//        var currentArticle = Article()
+        selected.apply{
             setTitle(et_title.text.toString())
             setPublishDate(tv_date_b.text.toString())
             setMdContent(et_mdContent.text.toString())
+            setEditTime(getDate().toString())
             setHtmlContent("<p>"+et_mdContent.text.toString()+"</p>")
 //            setSummary(et_mdContent.text.toString().substring(0,max(et_mdContent.text.toString().length,20)))
-        }.let { staticArticleList?.add(it)
+        }.let { if(position==-1){staticArticleList?.add(it)}else{
+            staticArticleList?.set(position, it)
+        }
 
         }
 //        TODO("sql")
